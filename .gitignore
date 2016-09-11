@@ -1,0 +1,27 @@
+#API FILES
+
+# Ignore bundler config.
+/API/.bundle
+
+# Ignore all logfiles and tempfiles.
+/API/log/*
+/API/tmp/*
+/API/log/.keep
+/API/tmp/.keep
+
+# Ignore Byebug command history file.
+/API/.byebug_history
+
+# Ignore public assets
+/API/public/system/**
+/API/public/assets/**
+
+# MOBILE FILES
+
+MOBILE/node_modules/
+MOBILE/www/build/
+MOBILE/platforms/
+MOBILE/plugins/
+MOBILE/*.swp
+MOBILE/.DS_Store
+MOBILE/Thumbs.db

@@ -1,0 +1,8 @@
+<%= form_tag profile_path, method: 'post', remote: true do %>
+  <%= label_tag :device_id %>
+  <%= text_field_tag :device_id, @device_id %>
+
+  <%= submit_tag "Update" %>
+<% end %>
+
+

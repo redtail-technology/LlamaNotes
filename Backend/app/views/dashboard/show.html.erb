@@ -1,0 +1,231 @@
+<script>
+  $(function(){
+    ROBONOTES.companies = {
+      container: $("table#companies tbody"),
+      setUrl: function(id, url) {
+        this.container.children('[data-id="' + id + '"]').find("#webhook-url")
+                      .html(url);
+      }
+    };
+  })
+</script>
+<style>
+  #companies td {
+    padding: 10px;
+  }
+</style>
+<div class="header-panel shadow-z-2">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-xs-3">
+        <h1 style="font-size:22px;">LLAMA NOTES</h1>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="container-fluid main">
+  <div class="row">
+    <nav class="col-xs-3 menu">
+      <ul>
+        <li class="active withripple" data-target="#dashboard">Dashboard</li>
+        <li class="withripple" data-target="#profile">Profile</li>
+        <li><%= link_to 'Logout', destroy_user_session_path, :method => :delete %>
+        </li>
+      </ul>
+    </nav>
+    <div class="pages col-xs-9">
+      <div class="row">
+        <div class="col-xs-10">
+          <div class="well page active" id="dashboard">
+            <% if current_user.partner? %>
+              <h3><%= current_user.name %></h3>
+              <hr>
+              <%= image_tag current_user.icon.url %>
+            <% else %>
+              <h3>Partners</h3>
+              <hr>
+              <table id="companies">
+                <thead>
+                  <tr>
+                    <td></td>
+                    <td></td>
+                    <td>
+                    </td>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% @companies.each do |c| %>
+                  <tr data-id="<%= c[:id] %>">
+                    <td id="icon_url"><%= image_tag c[:icon_url], style: 'width: 35px; border-radius: 4px;' %>
+                      <td id="name"><%= c[:name] %></td>
+                      <td id="webhook-url"><%= get_webhook(c[:id], c[:webhook_token]) %></td>
+                    </tr>
+                    <% end %>
+                  </tbody>
+                </table>
+              <% end %>
+          </div>
+          <div class="well page" id="profile">
+            <h3>Profile</h3>
+            <hr>
+            <%= form_for(current_user, as: :user, url: registration_path(:user), html: { method: :put }) do |f| %>
+
+              <% if current_user.partner? %>
+                <div class="form-group">
+                  <label for="name" class="col-md-2 control-label">Name</label>
+
+                  <div class="col-md-10">
+                    <%= f.text_field :name, class: 'form-control' %>
+                  </div>
+                </div>
+              <% end %>
+
+              <% if current_user.client? %>
+                <div class="form-group">
+                  <label for="device_id" class="col-md-2 control-label">Device ID</label>
+
+                  <div class="col-md-10">
+                    <%= f.text_field :device_id, class: 'form-control' %>
+                  </div>
+                </div>
+              <% end %>
+
+              <div class="form-group">
+                <label for="email" class="col-md-2 control-label">Email</label>
+
+                <div class="col-md-10">
+                  <%= f.email_field :email, class: 'form-control' %>
+                </div>
+              </div>
+
+              <% if current_user.partner? %>
+                <div class="form-group">
+                  <label for="icon" class="col-md-2 control-label">Icon</label>
+
+                  <div class="col-md-10">
+                    <%= f.file_field :icon, class: 'form-control' %>
+                    <input type="text" readonly class="form-control" placeholder="Upload icon">
+                  </div>
+                </div>
+              <% end %>
+              <div class="form-group">
+                <label for="password" class="col-md-2 control-label">Password</label>
+                <div class="col-md-10">
+                  <%= f.password_field :password, class: 'form-control', autocomplete: "off" %>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="password_confirmation" class="col-md-2 control-label">Password Confirmation</label>
+                <div class="col-md-10">
+                  <%= f.password_field :password_confirmation, class: 'form-control', autocomplete: "off" %>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="current_password" class="col-md-2 control-label">Current Password</label>
+                <div class="col-md-10">
+                  <%= f.password_field :current_password, class: 'form-control', autocomplete: "off" %>
+                </div>
+              </div>
+              <%= f.submit "Update", style: 'margin-top:40px;', class: 'btn btn-raised btn-info' %>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Open source code -->
+<script>
+  window.page = window.location.hash || "#about";
+
+  $(document).ready(function () {
+    if (window.page != "#about") {
+      $(".menu").find("li[data-target=" + window.page + "]").trigger("click");
+    }
+  });
+
+  $(window).on("resize", function () {
+    $("html, body").height($(window).height());
+    $(".main, .menu").height($(window).height() - $(".header-panel").outerHeight());
+    $(".pages").height($(window).height());
+  }).trigger("resize");
+
+  $(".menu li").click(function () {
+    // Menu
+    if (!$(this).data("target")) return;
+    if ($(this).is(".active")) return;
+    $(".menu li").not($(this)).removeClass("active");
+    $(".page").not(page).removeClass("active").hide();
+    window.page = $(this).data("target");
+    var page = $(window.page);
+    window.location.hash = window.page;
+    $(this).addClass("active");
+
+
+    page.show();
+
+    var totop = setInterval(function () {
+      $(".pages").animate({scrollTop: 0}, 0);
+    }, 1);
+
+    setTimeout(function () {
+      page.addClass("active");
+      setTimeout(function () {
+        clearInterval(totop);
+      }, 1000);
+    }, 100);
+  });
+
+  function cleanSource(html) {
+    var lines = html.split(/\n/);
+
+    lines.shift();
+    lines.splice(-1, 1);
+
+    var indentSize = lines[0].length - lines[0].trim().length,
+        re = new RegExp(" {" + indentSize + "}");
+
+    lines = lines.map(function (line) {
+      if (line.match(re)) {
+        line = line.substring(indentSize);
+      }
+
+      return line;
+    });
+
+    lines = lines.join("\n");
+
+    return lines;
+  }
+
+  $("#opensource").click(function () {
+    $.get(window.location.href, function (data) {
+      var html = $(data).find(window.page).html();
+      html = cleanSource(html);
+      $("#source-modal pre").text(html);
+      $("#source-modal").modal();
+    });
+  });
+</script>
+
+<script src="http://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+<!-- Material Design for Bootstrap -->
+<%= javascript_include_tag 'material' %>
+<%= javascript_include_tag 'ripples.min' %>
+
+<script>
+  $.material.init();
+</script>
+
+
+<!-- Dropdown.js -->
+<script src="https://cdn.rawgit.com/FezVrasta/dropdown.js/master/jquery.dropdown.js"></script>
+<script>
+  $("#dropdown-menu select").dropdown();
+</script>
+
+

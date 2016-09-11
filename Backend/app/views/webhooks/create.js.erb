@@ -1,0 +1,10 @@
+<% if @webhook.errors.any? %>
+  alert('webhook not created due to error!')
+<% else %>
+  ROBONOTES.companies.setUrl(
+    <%= @webhook.company_id %>,
+    "<%= j link_to api_v1_webhooks_path(@webhook.token),
+                   webhooks_path(@webhook.token),
+                   remote: true %>"
+  )
+<% end %>

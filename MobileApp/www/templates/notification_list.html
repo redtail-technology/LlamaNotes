@@ -1,0 +1,17 @@
+<style>
+  .item-thumbnail-left, .item-thumbnail-left .item-content {
+    padding-left: 85px;
+    min-height: 85px;
+}
+</style>
+<ion-view hide-back-button="true" view-title="Notifications">
+  <ion-content>
+    <ion-list>
+      <ion-item class="item-thumbnail-left item-text-wrap" ng-repeat="item in items" >
+        <img style="max-width: 65px; max-height: 65px;" ng-src="{{item.icon_url}}">
+        <h2>{{item.company_name}} <span style="float:right; font-size:12px;">{{item.hour_created_at}}</span></h2>
+        <p style="white-space: normal;">{{item.message.trunc(80)}}</p>
+      </ion-item>
+    </ion-list>
+  </ion-content>
+</ion-view>

@@ -1,0 +1,4 @@
+ROBONOTES.modal.setTitle("Send Notification");
+ROBONOTES.modal.setBody("<%= j(render partial: 'partials/modal/webhooks_show',
+                                      locals: { token: @token}) %>");
+ROBONOTES.modal.show();

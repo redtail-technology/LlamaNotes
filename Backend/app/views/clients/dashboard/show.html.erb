@@ -1,0 +1,28 @@
+<h1>Client dashboard</h1>
+
+<table>
+  <thead>
+    <tr>
+      <td></td>
+      <td>name</td>
+      <td>enabled?</td>
+      <td>
+        Webhook URL
+      </td>
+    </tr>
+  </thead>
+  <tbody>
+    <% @companies.each do |c| %>
+      <tr>
+        <td><%= image_tag c[:icon_url], style: 'width: 50px;' %>
+        <td><%= c[:name] %></td>
+        <td>toggle switch</td>
+        <td><%= get_webhook(c[:id], c[:webhook_token]) %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%#= binding.pry %>
+<%= link_to 'Profile', profile_path, remote: true %>
+<%= link_to('Logout', destroy_user_session_path, :method => :delete) %>

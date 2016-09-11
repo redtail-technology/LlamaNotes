@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <%= javascript_include_tag :application %>
+
+    <!-- Mobile support -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Material Design fonts -->
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto:300,400,500,700" type="text/css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <!-- Bootstrap -->
+    <link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Bootstrap Material Design -->
+    <%= stylesheet_link_tag 'bootstrap-material-design' %>
+    <%= stylesheet_link_tag 'ripples.min' %>
+
+    <!-- Dropdown.js -->
+    <link href="http://cdn.rawgit.com/FezVrasta/dropdown.js/master/jquery.dropdown.css" rel="stylesheet">
+
+    <!-- Page style -->
+    <%= stylesheet_link_tag 'index' %>
+
+    <!-- jQuery -->
+    <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+    <title>Fuse16</title>
+    <%= csrf_meta_tags %>
+
+    <script>
+      // global namespace
+      var ROBONOTES = ROBONOTES || {};
+
+      $(function(){
+        // Globally available modal
+        ROBONOTES.modal = {
+          container: $("#modal"),
+          setTitle: function(title) {
+            this.container.find(".modal-title").html(title);
+          },
+          setBody: function(body) {
+            this.container.find(".modal-body").html(body);
+          },
+          show: function(){
+            this.container.modal('show');
+          },
+          hide: function(){
+            this.container.modal('hide');
+          },
+        };
+
+        ROBONOTES.flashMessages = {
+          container: $("#flash_messages"),
+          messages: [],
+          insert: function(array) {
+            this.messages = array;
+          },
+          setDestroyTimer: function() {
+            var self = this;
+            setTimeout(function() {
+              self.container.html('');
+            }, 4000);
+          },
+          render: function() {
+            var self = this;
+            this.messages.forEach(function(message){
+              self.container.html("<p>" + message[1] + "</p>");
+            });
+            this.setDestroyTimer();
+          },
+        };
+      })
+    </script>
+  </head>
+
+  <body>
+    <%#= render 'partials/flash_messages' %>
+    <%= yield %>
+
+    <%= render 'partials/modal' %>
+  </body>
+</html>

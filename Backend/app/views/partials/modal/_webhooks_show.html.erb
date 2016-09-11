@@ -1,0 +1,16 @@
+<pre>
+  <code>
+    <table>
+      <tr><td>POST</td></tr>
+      <tr><td><%= api_v1_webhooks_url(token) %></td></tr>
+      <tr><td>Content-Type: application/json</td></tr>
+      <tr><td>{ “message”: “This is my notification!” }</td></tr>
+    </table>
+  </code>
+</pre>
+<%= form_tag api_v1_webhooks_path(token), method: 'post', remote: true do %>
+  <%= label_tag :message, nil, style: 'color: #636363;' %>
+  <%= text_field_tag :message %>
+
+  <%= submit_tag "Send" %>
+<% end %>
